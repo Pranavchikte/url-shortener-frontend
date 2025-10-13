@@ -1,12 +1,12 @@
 // components/ui/floating-navbar.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useState } from "react"; // FIX: Import React to provide the JSX namespace
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from "framer-motion"; // Corrected the import path for motion
+} from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // Define a specific type for our nav items
@@ -20,7 +20,7 @@ export const FloatingNav = ({
   navItems,
   className,
 }: {
-  navItems: NavItem[]; // Use our specific NavItem type
+  navItems: NavItem[];
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
@@ -29,7 +29,6 @@ export const FloatingNav = ({
 
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     if (typeof current === "number") {
-      // FIX: Changed 'let' to 'const' as 'direction' is never reassigned.
       const direction = current - (scrollYProgress.getPrevious() || 0);
 
       if (scrollYProgress.get() < 0.05) {
@@ -63,7 +62,6 @@ export const FloatingNav = ({
           className
         )}
       >
-        {/* FIX: Replaced 'any' with our specific 'NavItem' type for type safety. */}
         {navItems.map((navItem: NavItem, idx: number) => (
           <a
             key={`link=${idx}`}
