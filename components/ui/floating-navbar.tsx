@@ -1,4 +1,3 @@
-// components/ui/floating-navbar.tsx
 "use client";
 import React, { useState } from "react"; // FIX: Import React to provide the JSX namespace
 import {
