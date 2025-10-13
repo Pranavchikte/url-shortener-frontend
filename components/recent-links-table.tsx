@@ -14,14 +14,14 @@ export function RecentLinksTable({ links }: RecentLinksTableProps) {
   if (links.length === 0) {
     return (
       <div className="mx-auto mt-10 w-full max-w-5xl px-4 text-center">
-        <p className="text-zinc-500">You haven't shortened any links yet. Create one above to see it here!</p>
+        {/* FIX: Replaced ' with &apos; to fix the unescaped entity error. */}
+        <p className="text-zinc-500">You haven&apos;t shortened any links yet. Create one above to see it here!</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto mt-10 w-full max-w-5xl px-4">
-      {/* Added: overflow-x-auto with custom scrollbar hiding */}
       <div className="glass-card overflow-x-auto scrollbar-hide">
         <Table>
           <TableHeader>
