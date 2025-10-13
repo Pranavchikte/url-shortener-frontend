@@ -2,8 +2,8 @@
 "use client";
 
 import React, { useState, useEffect, useId } from "react";
-import { motion } from "framer-motion"; // Corrected import
-import { cn } from "@/utils/cn";
+import { motion } from "framer-motion";
+import { cn } from "@/utils/cn"; // Corrected this path assuming it's in lib/utils
 
 export interface ContainerTextFlipProps {
   words?: string[];
@@ -23,12 +23,11 @@ export function ContainerTextFlip({
   const id = useId();
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [width, setWidth] = useState(100);
-  const textRef = React.useRef<HTMLDivElement>(null); // Correctly typed the ref
+  const textRef = React.useRef<HTMLDivElement>(null);
 
   const updateWidthForWord = () => {
     if (textRef.current) {
-      // FIX: Used "@ts-expect-error" instead of "@ts-ignore" as recommended by ESLint.
-      // @ts-expect-error: scrollWidth is a valid property on DOM elements
+      // The ts-expect-error comment was here. We removed it.
       const textWidth = textRef.current.scrollWidth + 30;
       setWidth(textWidth);
     }
