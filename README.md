@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LinkLoom: Frontend Interface
 
-## Getting Started
+This is the official frontend for **LinkLoom**, a high-performance URL shortener. Built with **Next.js** and **Tailwind CSS**, this application provides a clean, modern, and responsive user interface for interacting with the LinkLoom backend API.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Functionality
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Shorten URLs**: A simple and intuitive form to submit long URLs and receive a shortened version instantly.
+- **Session History**: View a real-time list of all links created during the current browser session.
+- **One-Click Copy**: Easily copy the generated short link to the clipboard for sharing.
+- **Responsive Design**: A seamless user experience across all devices, from mobile to desktop.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Technologies Used
 
-## Learn More
+This project leverages a modern, production-ready frontend stack to ensure performance, scalability, and an excellent developer experience.
 
-To learn more about Next.js, take a look at the following resources:
+| Technology       | Role & Justification                                                                                                                                         |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Next.js (React)**     | The core framework for building the user interface. Chosen for its powerful features like the App Router, server-side rendering, and seamless development. |
+| **TypeScript**         | Used for all application code to provide robust type safety. Prevents common bugs and improves code maintainability.                                   |
+| **Tailwind CSS**       | A utility-first CSS framework for rapid UI development. Enables building custom, responsive designs directly in the markup.                            |
+| **Axios**              | HTTP client used to communicate with the backend API. Offers a simple, promise-based API for handling requests and responses efficiently.              |
+| **Lucide React**       | Provides a clean, lightweight, and consistent set of icons used throughout the UI.                                                                    |
+| **react-hot-toast**    | Library for displaying non-intrusive notifications (toasts) for immediate user feedback.                                                              |
+| **Vercel**             | The designated deployment platform. Offers zero-configuration, globally distributed hosting for best performance.                                      |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏁 Getting Started
 
-## Deploy on Vercel
+Follow these instructions to set up and run the project locally for development.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Prerequisites
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Node.js (version 18.x or higher)
+- npm (comes with Node.js)
+- Git
+- The LinkLoom backend must be running locally.
+
+### Installation
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/linkloom-frontend.git
+    cd linkloom-frontend
+    ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3. **Configure Environment Variables:**
+
+    Create a new file named `.env.local` in the root of your project. This file will tell your frontend where the backend is running.
+
+    ```env
+    # .env.local
+
+    # The URL of your locally running backend server
+    NEXT_PUBLIC_API_URL=http://localhost:8000
+    ```
+
+### Running the Application
+
+1. **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+
+2. **Open the application:**
+
+    Open your browser and navigate to [http://localhost:3000](http://localhost:3000). You should see the application running.
+
+---
+
+## 🔌 API Connection
+
+This application consumes the REST API provided by the LinkLoom backend.  
+For detailed information about the API endpoints, data models, and status codes, please refer to the backend's documentation.
+
+---
+
+
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
