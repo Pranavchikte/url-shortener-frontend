@@ -1,10 +1,8 @@
-// components/ui/navbar-menu.tsx
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { cn } from "@/lib/utils"; // FIX: Import the 'cn' utility
+import { motion } from "motion/react";
+
+
 
 const transition = {
   type: "spring",
@@ -44,10 +42,13 @@ export const MenuItem = ({
             <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
               <motion.div
                 transition={transition}
-                layoutId="active"
+                layoutId="active" // layoutId ensures smooth animation
                 className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
               >
-                <motion.div layout className="w-max h-full p-4">
+                <motion.div
+                  layout // layout ensures smooth animation
+                  className="w-max h-full p-4"
+                >
                   {children}
                 </motion.div>
               </motion.div>
@@ -62,20 +63,14 @@ export const MenuItem = ({
 export const Menu = ({
   setActive,
   children,
-  className, // FIX: Accept a className prop
 }: {
   setActive: (item: string | null) => void;
   children: React.ReactNode;
-  className?: string; // FIX: Add className to the type definition
 }) => {
   return (
     <nav
-      onMouseLeave={() => setActive(null)}
-      // FIX: Use the 'cn' utility to merge the default classes with the passed className
-      className={cn(
-        "relative rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4 px-8 py-6 ",
-        className
-      )}
+      onMouseLeave={() => setActive(null)} // resets the state
+      className="relative rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4 px-8 py-6 "
     >
       {children}
     </nav>
@@ -94,8 +89,8 @@ export const ProductItem = ({
   src: string;
 }) => {
   return (
-    <Link href={href} className="flex space-x-2">
-      <Image
+    <a href={href} className="flex space-x-2">
+      <img
         src={src}
         width={140}
         height={70}
@@ -110,24 +105,17 @@ export const ProductItem = ({
           {description}
         </p>
       </div>
-    </Link>
+    </a>
   );
 };
 
-interface HoveredLinkProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  children: React.ReactNode;
-  href: string;
-}
-
-export const HoveredLink = ({ children, href, ...rest }: HoveredLinkProps) => {
+export const HoveredLink = ({ children, ...rest }: any) => {
   return (
-    <Link
-      href={href}
+    <a
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black"
+      className="text-neutral-700 dark:text-neutral-200 hover:text-black "
     >
       {children}
-    </Link>
+    </a>
   );
 };
