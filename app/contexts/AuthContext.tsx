@@ -42,8 +42,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('authToken', response.access_token);
       toast.success("Logged in successfully!");
       router.push('/'); // Redirect to the homepage after login
-    } catch (error: any) {
-      toast.error(error.message || "Login failed.");
+    } catch (error: unknown) { // <-- FIX IS HERE
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred during login.");
+      }
       throw error;
     }
   };

@@ -6,7 +6,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+// import { useSearchParams } from "next/navigation"
 import Toaster from "@/components/ui/toaster"
 
 export default function ClientLayout({
@@ -14,7 +14,7 @@ export default function ClientLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
 
   return (
     <html lang="en" className="dark">

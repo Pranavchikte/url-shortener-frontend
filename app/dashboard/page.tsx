@@ -1,3 +1,4 @@
+// app/dashboard/page.tsx
 "use client";
 
 import { useState, useMemo } from "react";
@@ -11,28 +12,23 @@ import { QRCodeModal } from "@/components/QRCodeModal";
 import { ConfirmDeleteModal } from "@/components/ConfirmDeleteModal";
 import { toDataURL } from 'qrcode';
 import { cn } from "@/lib/utils";
-import { useLinks } from "@/app/contexts/LinksContext"; // FIX: Import the new useLinks hook
+import { useLinks } from "@/app/contexts/LinksContext";
 
 export default function DashboardPage() {
-  // FIX: Get master list of links and actions from the global context.
   const { links, isLoading, updateLink, removeLink } = useLinks();
   
-  // State for modals and filters remains local to this page's UI.
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState<ShortenedURL | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
 
-  // FIX: The useEffect for fetching data is now removed. The context handles it.
-
   const handleToggleStatus = async (shortCode: string) => {
     try {
       const updatedLink = await toggleLinkStatus(shortCode);
-      // Update the central state with the confirmed data from the server.
       updateLink(updatedLink); 
       toast.success(`Link is now ${updatedLink.is_active ? 'active' : 'inactive'}.`);
-    } catch (error) {
+    } catch (_error) { // <-- FIX #1 IS HERE
       toast.error("Failed to update link status.");
     }
   };
@@ -74,10 +70,9 @@ export default function DashboardPage() {
 
     try {
       await deleteLink(selectedLink.short_code);
-      // Remove the link from the central state.
       removeLink(selectedLink.short_code); 
       toast.success("Link deleted successfully!");
-    } catch (error) {
+    } catch (_error) { // <-- FIX #2 IS HERE
       toast.error("Failed to delete link.");
     } finally {
       handleCloseDeleteDialog();
