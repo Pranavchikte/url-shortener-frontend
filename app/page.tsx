@@ -1,30 +1,42 @@
-// app/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import { NavBar } from "@/components/nav-bar";
 import { Hero } from "@/components/hero";
 import { ShortenForm } from "@/components/shorten-form";
 import { RecentLinksTable } from "@/components/recent-links-table";
-import { shortenUrl, ShortenedURL } from "@/lib/api";
+import { shortenUrl } from "@/lib/api";
 import toast from "react-hot-toast";
-import { ProtectedRoute } from "@/components/ProtectedRoute"; // <-- IMPORT THE GUARD
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { useLinks } from "@/app/contexts/LinksContext"; // FIX: Import the new useLinks hook
 
 export default function HomePage() {
-  const [links, setLinks] = useState<ShortenedURL[]>([]);
+  // FIX: Get the master list of links and the 'addLink' function from our global context.
+  const { links, addLink } = useLinks();
 
+  // FIX: This function now calls the API and then updates the global state.
   const handleShortenUrl = async (originalUrl: string) => {
     try {
       const newLink = await shortenUrl(originalUrl);
-      setLinks((prevLinks) => [newLink, ...prevLinks]);
+      // Update the central "whiteboard" with the new link.
+      addLink(newLink);
       toast.success("Link shortened successfully!");
-    } catch (error) {
-      toast.error("Failed to shorten link. Please check the URL and try again.");
+    } catch (error: any) {
+      if (error.response?.status !== 401) {
+        toast.error(error.message || "Failed to shorten link.");
+      }
     }
   };
+  
+  // FIX: Create a derived list of the 5 most recent active links from the global state.
+  const recentActiveLinks = useMemo(() => {
+    return links
+      .filter(link => link.is_active) // Only include active links
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) // Sort by newest first
+      .slice(0, 5); // Take the first 5
+  }, [links]); // This list will automatically recalculate whenever the global 'links' state changes.
 
   return (
-    // WRAP YOUR PAGE CONTENT WITH THE PROTECTEDROUTE COMPONENT
     <ProtectedRoute>
       <main className="min-h-screen bg-black text-white">
         <NavBar />
@@ -33,7 +45,8 @@ export default function HomePage() {
           <ShortenForm onUrlShortened={handleShortenUrl} />
         </div>
         <div className="mt-16 pb-16">
-          <RecentLinksTable links={links} />
+          {/* Pass the newly derived recent links to the table */}
+          <RecentLinksTable links={recentActiveLinks} />
         </div>
       </main>
     </ProtectedRoute>

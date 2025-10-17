@@ -3,21 +3,19 @@
 
 import React from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { useAuth } from "@/app/contexts/AuthContext"; // Import our auth hook
-import { LogoutButton } from "./LogoutButton"; // Import our new logout button
+import { useAuth } from "@/app/contexts/AuthContext";
+import { LogoutButton } from "./LogoutButton";
 import {
   IconHome,
   IconLink,
-  IconDashboard,
+  IconDashboard, // <-- Make sure this is imported
   IconLogin,
   IconUserPlus,
 } from "@tabler/icons-react";
 
 export function NavBar() {
-  // Get the authentication state from our context
   const { isAuthenticated } = useAuth();
 
-  // Define links that are always visible
   const baseLinks = [
     {
       title: "Home",
@@ -31,17 +29,16 @@ export function NavBar() {
     },
   ];
 
-  // Define links only for authenticated (logged-in) users
+  // FIX: Added the "Dashboard" link to the authenticated user's navigation.
   const authLinks = [
     ...baseLinks,
     {
       title: "Dashboard",
       icon: <IconDashboard className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-      href: "/dashboard", // We will build this page next
+      href: "/dashboard", 
     },
   ];
 
-  // Define links only for public (logged-out) users
   const publicLinks = [
     ...baseLinks,
     {
@@ -52,16 +49,14 @@ export function NavBar() {
     {
       title: "Register",
       icon: <IconUserPlus className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-      href: "/signup", // Corrected path to match our page
+      href: "/signup",
     },
   ];
 
-  // Dynamically choose which set of links to display
   const linksToShow = isAuthenticated ? authLinks : publicLinks;
 
   return (
     <>
-      {/* The FloatingDock now displays the correct links */}
       <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
         <FloatingDock
           mobileClassName="translate-y-0"
@@ -69,7 +64,6 @@ export function NavBar() {
         />
       </div>
       
-      {/* The LogoutButton only appears if the user is logged in */}
       {isAuthenticated && <LogoutButton />}
     </>
   );

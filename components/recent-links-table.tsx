@@ -2,7 +2,7 @@
 "use client";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Copy } from "lucide-react";
+import { Copy, ExternalLink } from "lucide-react"; // FIX: Import ExternalLink
 import toast from "react-hot-toast";
 import { ShortenedURL } from "@/lib/api";
 
@@ -10,11 +10,16 @@ interface RecentLinksTableProps {
   links: ShortenedURL[];
 }
 
+// FIX: Add the truncateUrl helper function
+function truncateUrl(url: string, maxLength = 40): string {
+  if (url.length <= maxLength) return url;
+  return url.substring(0, maxLength - 3) + "...";
+}
+
 export function RecentLinksTable({ links }: RecentLinksTableProps) {
   if (links.length === 0) {
     return (
       <div className="mx-auto mt-10 w-full max-w-5xl px-4 text-center">
-        {/* FIX: Replaced ' with &apos; to fix the unescaped entity error. */}
         <p className="text-zinc-500">You haven&apos;t shortened any links yet. Create one above to see it here!</p>
       </div>
     );
@@ -52,20 +57,25 @@ export function RecentLinksTable({ links }: RecentLinksTableProps) {
                       href={link.short_url} 
                       target="_blank" 
                       rel="noreferrer" 
-                      className="truncate hover:underline text-zinc-300"
+                      className="inline-flex items-center gap-2 truncate hover:underline text-zinc-300"
                     >
-                      {link.short_url}
+                      <span className="text-zinc-400">sho.rt/</span>
+                      <span className="text-white font-bold">{link.short_code}</span>
+                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
                     </a>
                   </div>
                 </TableCell>
                 <TableCell className="truncate">
+                  {/* FIX: Apply the same truncation and styling as the dashboard */}
                   <a 
                     href={link.original_url} 
                     target="_blank" 
-                    rel="noreferrer" 
-                    className="hover:underline text-zinc-400"
+                    rel="noreferrer"
+                    title={link.original_url} 
+                    className="inline-flex items-center gap-2 hover:underline text-zinc-400"
                   >
-                    {link.original_url}
+                    {truncateUrl(link.original_url, 40)}
+                    <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
                   </a>
                 </TableCell>
               </TableRow>

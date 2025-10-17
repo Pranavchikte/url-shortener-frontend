@@ -10,22 +10,27 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated } = useAuth();
+  // Get both isAuthenticated and the new isLoading state
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // This effect runs when the component mounts.
-    // If the user is not authenticated, it redirects them to the login page.
-    if (!isAuthenticated) {
+    // IMPORTANT: Only run this check if loading is complete
+    if (!isLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  // If the user is authenticated, render the children (the actual page content).
-  // Otherwise, render a loading message or null to prevent a flash of content.
+  // If we are still loading, show a loading message
+  if (isLoading) {
+    return <p className="text-white text-center mt-20">Authenticating...</p>;
+  }
+
+  // If loading is done and the user is authenticated, show the page
   if (isAuthenticated) {
     return <>{children}</>;
   }
 
-  return <p className="text-white text-center mt-20">Loading...</p>;
+  // If loading is done and user is not authenticated, render nothing while redirect happens
+  return null;
 }

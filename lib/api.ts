@@ -1,12 +1,13 @@
-// lib/api.ts
-
 import axios from "axios";
 import toast from "react-hot-toast";
 
+// FIX: Added 'created_at' to our data blueprint.
 export interface ShortenedURL {
     short_code: string;
     short_url: string;
     original_url: string;
+    is_active: boolean;
+    created_at: string; // The date will come as a string from the JSON response
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -29,33 +30,22 @@ apiClient.interceptors.request.use(
     }
 );
 
-// vvv THIS IS THE NEW PART vvv
 // Interceptor to handle responses, specifically for token expiration.
 apiClient.interceptors.response.use(
-    // If the response is successful, just return it.
     (response) => {
         return response;
     },
-    // If there's an error...
     (error) => {
-        // Check if the error is a 401 Unauthorized.
         if (error.response && error.response.status === 401) {
-            // Clear the expired token from storage.
             localStorage.removeItem('authToken');
-
-            // Inform the user.
             toast.error("Your session has expired. Please log in again.");
-
-            // Redirect to the login page.
-            // We use window.location.href for a full page reload to clear all state.
-            window.location.href = '/login';
+            if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+            }
         }
-
-        // For any other error, just pass it along.
         return Promise.reject(error);
     }
 );
-// ^^^ END OF NEW PART ^^^
 
 export const shortenUrl = async (originalUrl: string): Promise<ShortenedURL> => {
     try {
@@ -64,11 +54,60 @@ export const shortenUrl = async (originalUrl: string): Promise<ShortenedURL> => 
         });
         return response.data;
     } catch (error) {
-        // The interceptor will handle 401 errors, so we just re-throw for others.
         if (axios.isAxiosError(error) && error.response?.status !== 401) {
             throw new Error(error.response?.data.detail || "Failed to shorten URL.");
         }
-        // Avoid re-throwing the error if the interceptor is handling it.
+        return Promise.reject(error);
+    }
+};
+
+export const getUserLinks = async (): Promise<ShortenedURL[]> => {
+    try {
+        const response = await apiClient.get("/api/me/links");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching user links:", error);
+        if (axios.isAxiosError(error) && error.response?.status !== 401) {
+            throw new Error(error.response?.data.detail || "Failed to fetch links.");
+        }
+        return Promise.reject(error);
+    }
+};
+
+export const getRecentUserLinks = async (): Promise<ShortenedURL[]> => {
+    try {
+        const response = await apiClient.get("/api/me/links/recent");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching recent user links:", error);
+        if (axios.isAxiosError(error) && error.response?.status !== 401) {
+            throw new Error(error.response?.data.detail || "Failed to fetch recent links.");
+        }
+        return Promise.reject(error);
+    }
+};
+
+export const toggleLinkStatus = async (shortCode: string): Promise<ShortenedURL> => {
+    try {
+        const response = await apiClient.patch(`/api/links/${shortCode}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error toggling link status:", error);
+        if (axios.isAxiosError(error) && error.response?.status !== 401) {
+            throw new Error(error.response?.data.detail || "Failed to update link status.");
+        }
+        return Promise.reject(error);
+    }
+};
+
+export const deleteLink = async (shortCode: string): Promise<void> => {
+    try {
+        await apiClient.delete(`/api/links/${shortCode}`);
+    } catch (error) {
+        console.error("Error deleting link:", error);
+        if (axios.isAxiosError(error) && error.response?.status !== 401) {
+            throw new Error(error.response?.data.detail || "Failed to delete link.");
+        }
         return Promise.reject(error);
     }
 };
